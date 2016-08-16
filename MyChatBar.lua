@@ -3,6 +3,7 @@
 local chatFrame1 = _G["ChatFrame1"]
 local editBox = ChatEdit_ChooseBoxForSend()
 
+-- editBox:SetPoint("TOPLEFT", ChatFrame1, "BOTTOMLEFT",0,-20)
 local MyChatBarFrame = CreateFrame("Frame", "MyChatBarFrame", UIParent)
 MyChatBarFrame:SetSize(24,24)
 -- MyChatBarFrame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="", tile = false, edgeSize=1})
@@ -34,7 +35,7 @@ end
 -- print(chatFrame1:GetWidth()..","..chatFrame1:GetHeight())
 
 -- print(editBox:GetName())
--- editBox:SetPoint("TOPLEFT", ChatFrame1,"BOTTOMLEFT",0 -20 )
+
 -- TODO
 local function ShowChannelButtons(channels)
 	local cButton, cButtonName, text
