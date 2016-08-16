@@ -1,44 +1,99 @@
 
+
+local chatFrame1 = _G["ChatFrame1"]
+local editBox = ChatEdit_ChooseBoxForSend()
+
 local MyChatBarFrame = CreateFrame("Frame", "MyChatBarFrame", UIParent)
 MyChatBarFrame:SetSize(24,24)
-MyChatBarFrame:SetPoint("TOPLEFT",_G["ChatFrame1"],"BOTTOMLEFT",10,24)
+-- MyChatBarFrame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="", tile = false, edgeSize=1})
+-- MyChatBarFrame:SetBackdropColor(.5,.5,.5,.5)
+MyChatBarFrame:SetPoint("TOPLEFT",chatFrame1,"BOTTOMLEFT",-5,-8) -- bar position
 
+ChannelType = {
+	["SAY"]		= {"ËØ¥"},
+	["YELL"]	= {"Âñä"},
+	["GUILD"]	= {"‰ºö"},
+	["PARTY"]	= {"Èòü"},
+	["RAID"]	= {"Âõ¢"},
+	["OFFICER"]	= {"ÂÆò"},
+	["INSTANCE_CHAT"] = {"ÂâØ"}
+}
 
+local space = 20
+local proxy = getmetatable(ChatTypeInfo).__index
+for k,v in pairs(proxy) do
+	if k == "INSTANCE_CHAT" then
+		for a,b in pairs(v) do
+			print(a..":"..tostring(b))
+		end
+	end
+end
+--[[
+	ChatTypeInfo["SAY"] -- ‰∏Ä‰∫õËØ¥È¢ëÈÅìÁöÑÂ±ûÊÄß
+]]
+-- print(chatFrame1:GetWidth()..","..chatFrame1:GetHeight())
+
+-- print(editBox:GetName())
+-- editBox:SetPoint("TOPLEFT", ChatFrame1,"BOTTOMLEFT",0 -20 )
 -- TODO
 local function ShowChannelButtons(channels)
 	local cButton, cButtonName, text
 	for i = 1,#channels do
 		text = channels[i]
+		-- print(text)
 		cButtonName = "MyChatBarFrame"..i
 		cButton = _G[cButtonName]
-		-- ¥¥Ω®∞¥≈•
+		-- ÂàõÂª∫ÊåâÈíÆ
 		if (not cButton) then
+			-- print(cButtonName)
 			cButton = CreateFrame("Frame", cButtonName, MyChatBarFrame)
 			cButton:SetWidth(18)
 			cButton:SetHeight(18)
-			cButton:SetPoint("LEFT",cButton:GetParent(),"RIGHT",5,0)
+			-- cButton:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="", tile = false, edgeSize=1})
+			-- cButton:SetBackdropColor(1,1,0,.5)
+			-- cButton:SetBackdropBorderColor(,0,1,1)
+			-- print(cButton:GetWidth())
+			-- print(space)
+			cButton:SetScript("OnMouseDown",function(self,button)
+				if button == "LeftButton" then
+					print("click")
+					editBox:SetAttribute("chatType", "CHANNEL4")
+					ChatEdit_ActivateChat(editBox)
+					editBox:SetText(editBox:GetText())
+				else
+				end
+			end)
+			cButton.text = cButton:CreateFontString(nil,"ARTWORK")
+			cButton.text:SetFont(UNIT_NAME_FONT, 14, "THINOUTLINE")
+			cButton.text:SetShadowOffset(1,0)
+			cButton.text:SetPoint("CENTER", cButton, "CENTER", 0, 0)
+			cButton.text:SetJustifyH("CENTER")
+			cButton.text:SetText(text)
+			
 		end
+		cButton:SetPoint("LEFT",cButton:GetParent(),"LEFT",(i-1)*(space + cButton:GetWidth()),0)
+		
 	end
 end
 
 local function addChannels(self)
 	local channels = {}
-	tinsert(channels,"Àµ")
-	tinsert(channels,"∫∞")
+	tinsert(channels,"ËØ¥")
+	tinsert(channels,"Âñä")
 	if (IsInGuild()) then
-		tinsert(channels,"ª·")
+		tinsert(channels,"‰ºö")
 		if (CanEditOfficerNote()) then
-			tinsert(channels, "πŸ")
+			tinsert(channels, "ÂÆò")
 		end
 	end
 	if self.inParty then
-		tinsert(channels, "∂”")
+		tinsert(channels, "Èòü")
 	end
 	if self.inRaid then
-		tinsert(channels, "Õ≈")
+		tinsert(channels, "Âõ¢")
 	end
 	if self.inInstance then
-		tinsert(channels, "∏±")
+		tinsert(channels, "ÂâØ")
 	end
 	
 	ShowChannelButtons(channels)
@@ -52,6 +107,9 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 	self.inParty = inParty
 	self.inInstance = inInstance
 	addChannels(self)
+end)
+MyChatBarFrame:SetScript("OnEnter",function()
+	print("MyChatBarFrame")
 end)
 MyChatBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")

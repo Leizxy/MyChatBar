@@ -1,6 +1,6 @@
 ## Interface: 70000
 ## Title: MyChatBar
-## Notes: For Myself
+## Notes: Leizy's ChatBar
 ## Author: Leizy
 
 MyChatBar.lua
