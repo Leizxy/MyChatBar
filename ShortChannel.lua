@@ -1,5 +1,4 @@
---[[
-local locale = GetLocale()
+--[[local locale = GetLocale()
 
 local ShortChannels = {
     ["PARTY"]                = { zhTW="(ê )",   zhCN="(¶Ó)" },
@@ -25,5 +24,4 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", function(self, event, msg, f
     end
     return false, msg, fullname, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, guid, ...
 end)
-
 ]]
