@@ -77,10 +77,11 @@ local function ShowChannelButtons(channels)
 		if (not cButton) then
 			-- print(cButtonName)
 			cButton = CreateFrame("Frame", cButtonName, MyChatBarFrame)
-			cButton.tbChannel = channels[i]
+			
 			-- cButton:SetWidth(18)
 			cButton:SetHeight(18)
 			-- TODO
+			--[[
 			-- cButton:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=1})
 			for k = 1,#channels do
 				if channels[k].currentChannel and editBox:isVisible() and k==i then
@@ -91,6 +92,7 @@ local function ShowChannelButtons(channels)
 					-- cButton:SetBackdropBorderColor(color.r,color.g,color.b,1)					
 				end
 			end
+			]]
 
 			cButton:SetScript("OnMouseDown",function(self,button)
 				local context = editBox:GetText()
@@ -103,7 +105,7 @@ local function ShowChannelButtons(channels)
 						if UnitExists("target") and UnitName("target") and UnitIsPlayer("target")
 							and GetDefaultLanguage("player") == GetDefaultLanguage("target")then
 							local name, realm = UnitName("target")
-							if realm then
+							if realm~= "" then
 								ChatFrame_OpenChat("/w "..name.."-"..realm.." ",editBox.chatFrame)
 							else
 								ChatFrame_OpenChat("/w "..name.." ",editBox.chatFrame)
@@ -129,7 +131,8 @@ local function ShowChannelButtons(channels)
 			
 			
 		end
-		cButton.text:SetText(textString)
+		cButton.tbChannel = channels[i]
+		cButton.text:SetText(string.sub(textString,1,3))
 		cButton:SetWidth(ceil(cButton.text:GetWidth())+4)
 		--position
 		-- _G["Channel"..i] = cButton
@@ -171,7 +174,7 @@ local function addOtherChannels(channels)
 		channelID, channelName = select(i, GetChannelList())
 		-- print(channelName)
 		channelName = string.sub(channelName,1,6)
-		tinsert(channels, {input="/"..channelID.." ",currentChannel = false,text = channelName} )
+		tinsert(channels, {channel = "CHANNEL"..channelID, input="/"..channelID.." ",currentChannel = false,text = channelName} )
 	end
 	return channels
 end
@@ -205,8 +208,9 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 	local inRaid = IsInRaid()
 	local inParty = IsInGroup(LE_PARTY_CATEGORY_HOME)
 	local inInstance = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
-	if --event == "GROUP_ROSTER_UPDATE" or 
+	if event == "GROUP_ROSTER_UPDATE" or 
 	event == "PLAYER_ENTERING_WORLD" or event == "CHAT_MSG_CHANNEL_NOTICE" then
+		
 		self.inRaid = inRaid
 		self.inParty = inParty
 		self.inInstance = inInstance
