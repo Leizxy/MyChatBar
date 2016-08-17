@@ -132,7 +132,11 @@ local function ShowChannelButtons(channels)
 			
 		end
 		cButton.tbChannel = channels[i]
-		cButton.text:SetText(string.sub(textString,1,3))
+		if (channels[i].text == "大脚世界频道") then
+			cButton.text:SetText(string.sub(textString,7,9))
+		else
+			cButton.text:SetText(string.sub(textString,1,3))
+		end
 		cButton:SetWidth(ceil(cButton.text:GetWidth())+4)
 		--position
 		-- _G["Channel"..i] = cButton
@@ -173,7 +177,7 @@ local function addOtherChannels(channels)
 	for i = 1, select("#", GetChannelList()), 2 do
 		channelID, channelName = select(i, GetChannelList())
 		-- print(channelName)
-		channelName = string.sub(channelName,1,6)
+		-- channelName = string.sub(channelName,1,6)
 		tinsert(channels, {channel = "CHANNEL"..channelID, input="/"..channelID.." ",currentChannel = false,text = channelName} )
 	end
 	return channels
