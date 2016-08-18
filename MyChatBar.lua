@@ -56,9 +56,6 @@ end
 
 -- TODO
 
-local function onClick(self, button, channel, i)
-	
-end
 
 local function ShowChannelButtons(channels)
 	local cButton, cButtonName, textString
@@ -138,17 +135,15 @@ local function ShowChannelButtons(channels)
 			cButton.text:SetText(string.sub(textString,1,3))
 		end
 		cButton:SetWidth(ceil(cButton.text:GetWidth())+4)
+
 		--position
-		-- _G["Channel"..i] = cButton
-		-- print(_G["Channel"..i])
-		-- print(cButton)
-		
 		cButton.text:SetTextColor(color.r,color.g,color.b)
 		if i == 1 then 
 			cButton:SetPoint("LEFT", cButton:GetParent(), "LEFT", 0, 0)
 		else
 			cButton:SetPoint("LEFT", _G["Channel"..(i-1)], "RIGHT", space, 0)
 		end
+		
 		cButton:Show()
 		i = i + 1
 	end
@@ -158,26 +153,10 @@ local function ShowChannelButtons(channels)
 		i = i + 1
 	end
 end
---[[
-local function channel(...)
-    local channelId, channelName
-    local t = {}
-    for i = 1, select("#", ...), 2 do
-        channelId, channelName = select(i, ...)
-        tinsert(t, {TypeInfoKey="CHANNEL"..channelId, TextString=channelName})
-	end
-    return t
-end
 
-for _, v in pairs(channel(GetChannelList())) do
-	tinsert(data, v)
-end
-]]
-local function addOtherChannels(channels)
+local function addOtherChannels(channels) --大脚世界频道，综合等等
 	for i = 1, select("#", GetChannelList()), 2 do
 		channelID, channelName = select(i, GetChannelList())
-		-- print(channelName)
-		-- channelName = string.sub(channelName,1,6)
 		tinsert(channels, {channel = "CHANNEL"..channelID, input="/"..channelID.." ",currentChannel = false,text = channelName} )
 	end
 	return channels
@@ -213,8 +192,7 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 	local inParty = IsInGroup(LE_PARTY_CATEGORY_HOME)
 	local inInstance = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
 	if event == "GROUP_ROSTER_UPDATE" or 
-	event == "PLAYER_ENTERING_WORLD" or event == "CHAT_MSG_CHANNEL_NOTICE" then
-		
+	event == "PLAYER_ENTERING_WORLD" or event == "CHAT_MSG_CHANNEL_NOTICE" then		
 		self.inRaid = inRaid
 		self.inParty = inParty
 		self.inInstance = inInstance

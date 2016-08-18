@@ -3,6 +3,6 @@
 ## Notes: Leizy's ChatBar
 ## Author: Leizy
 
-
+Emotes.lua
 MyChatBar.lua
 ShortChannel.lua
