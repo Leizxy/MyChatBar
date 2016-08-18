@@ -69,14 +69,14 @@ info.emotes = {
 	{ text="{雷锋}", 	icon = "volunteer" },
 	{ text="{委屈}", 	icon = "wronged" },
 	
-	{ text="{汗}",		icon = "emoji"}
+	{ text="{汗}",		icon = "emoji1"}
 }
 -- print(info.emotes[1].text)
 local emotes = info.emotes
 local function filter(self, event, msg, ...)
 	for i = 1,#emotes do --每条msg都会跑#emotes次，看看能否优化
 		if msg:find(emotes[i].text) then
-			msg = msg:gsub(emotes[i].text,format("|T%s:16|t","Interface\\AddOns\\"..MyChatBar.."\\icon\\"..emotes[i].icon),1)
+			msg = msg:gsub(emotes[i].text,format("|T%s:20|t","Interface\\AddOns\\"..MyChatBar.."\\icon\\"..emotes[i].icon),1)
 		end
 	end
 	return false, msg, ...
