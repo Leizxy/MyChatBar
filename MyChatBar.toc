@@ -5,4 +5,4 @@
 
 Emotes.lua
 MyChatBar.lua
-ShortChannel.lua
+##ShortChannel.lua

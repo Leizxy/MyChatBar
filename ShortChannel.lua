@@ -80,7 +80,7 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL",func)
 
 ]]
 
-
+--[[
 --精简公共频道 (true/false) (精简/不精简)
 local ShortChannel = true
 
@@ -259,13 +259,23 @@ local chn, rplc
                 chn[8] = "%[%d+%. CustomChannel.-%]"   -- 自定义频道英文名随便填写
 
 	end
-
+local i = 0
 local function AddMessage(frame, text, ...)
+	--[[
 	for i = 1, 8 do	 -- 对应上面几个频道(如果有9个频道就for i = 1, 9 do)
 		text = gsub(text, chn[i], rplc[i])
 	end
-
-	text = gsub(text, "%[(%d0?)%. .-%]", "%1.") 
+	]]
+	-- print(text)
+	-- print(text)
+	text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
+	text = gsub(text, "%[(%d0?)%..-%]", "%1.") 
+	-- print(text)
+	i = i+1
+	if i<3 then
+		print(newAddMsg[frame:GetName()])
+		i = 0
+	end
 	return newAddMsg[frame:GetName()](frame, text, ...)
 end
 
@@ -273,8 +283,11 @@ if ShortChannel then
 	for i = 1, 5 do
 		if i ~= 2 then 
 			local f = _G[format("%s%d", "ChatFrame", i)]
+			-- print(format("%s%d", "ChatFrame", i))
 			newAddMsg[format("%s%d", "ChatFrame", i)] = f.AddMessage
 			f.AddMessage = AddMessage
+			print(f.AddMessage)
 		end
 	end
 end
+]]

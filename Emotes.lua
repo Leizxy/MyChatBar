@@ -1,5 +1,7 @@
 local MyChatBar, info = ...
 -- print(MyChatBar.. "?")
+-- local chatFrame1 = _G["ChatFrame1"]
+
 info.emotes = {
 --[[
 	--原版暴雪提供的8个图标

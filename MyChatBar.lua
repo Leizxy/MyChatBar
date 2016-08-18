@@ -102,7 +102,7 @@ local function ShowChannelButtons(channels)
 						if UnitExists("target") and UnitName("target") and UnitIsPlayer("target")
 							and GetDefaultLanguage("player") == GetDefaultLanguage("target")then
 							local name, realm = UnitName("target")
-							if realm~= "" then
+							if realm then
 								ChatFrame_OpenChat("/w "..name.."-"..realm.." ",editBox.chatFrame)
 							else
 								ChatFrame_OpenChat("/w "..name.." ",editBox.chatFrame)
@@ -187,11 +187,12 @@ local function addChannels(self)
 	ShowChannelButtons(channels)
 end
 
+
 MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 	local inRaid = IsInRaid()
 	local inParty = IsInGroup(LE_PARTY_CATEGORY_HOME)
 	local inInstance = IsInGroup(LE_PARTY_CATEGORY_INSTANCE)
-	if event == "GROUP_ROSTER_UPDATE" or 
+	if event == "PLAYER_LOGIN" or event == "GROUP_ROSTER_UPDATE" or 
 	event == "PLAYER_ENTERING_WORLD" or event == "CHAT_MSG_CHANNEL_NOTICE" then		
 		self.inRaid = inRaid
 		self.inParty = inParty
@@ -200,12 +201,24 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 	end
 end)
 
-MyChatBarFrame:SetScript("OnEnter",function()
+MyChatBarFrame:SetScript("OnUpdate",function(self,t)
+	addChannels(self)
 	-- print("MyChatBarFrame")
 end)
 
 MyChatBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+MyChatBarFrame:RegisterEvent("PLAYER_LOGIN")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 MyChatBarFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
-
+do
+	local add
+	add = chatFrame1.AddMessage
+	local function AddMessage(self,text,...)
+		-- TODO other channel
+		text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
+		text = gsub(text, "%[(%d0?)%..-%]", "%1.")
+		return add(self,text,...)
+	end
+	chatFrame1.AddMessage = AddMessage
+end
