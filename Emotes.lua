@@ -68,6 +68,7 @@ info.emotes = {
 	{ text="{胜利}", 	icon = "victory" },
 	{ text="{雷锋}", 	icon = "volunteer" },
 	{ text="{委屈}", 	icon = "wronged" }
+	-- http://emojipedia.org/grinning-face/
 	-- 1~10
 	,{ text="{angry}",		icon = "emoji_angry"}
 	,{ text="{anguish}",	icon = "emoji_anguished"}
@@ -89,11 +90,11 @@ info.emotes = {
 	,{ text="{frowning}",		icon = "emoji_frowning"}
 	,{ text="{smile2}",			icon = "emoji_glassessmile"}
 	,{ text="{grimace}",		icon = "emoji_grimacing"}
-	,{ text="{grin}",			icon = "emoji_grinning"}
+	,{ text="{😀}",			icon = "emoji_grinning"}
 	-- 21~30
 	,{ text="{grinsmile}",		icon = "emoji_grinningsmile"}
 	,{ text="{halosmile}",		icon = "emoji_halosmile"}
-	,{ text="{heart-shaped}",	icon = "emoji_heart_shaped"}
+	,{ text="{heartshaped}",	icon = "emoji_heart_shaped"}
 	,{ text="{hug}",			icon = "emoji_hugging"}
 	,{ text="{hush}",			icon = "emoji_hushed"}
 	,{ text="{imp}",			icon = "emoji_imp"}
@@ -150,7 +151,7 @@ local emotes = info.emotes
 local BASE_SITE = "Interface\\AddOns\\"..MyChatBar.."\\icon\\"
 
 local iconSize = 24
-local iconSpace = 1
+local iconSpace = 2
 local iconNums = #emotes
 -- print(MyChatBar.. "?")
 local chatFrame1 = _G["ChatFrame1"]
@@ -165,8 +166,11 @@ EmoteFrame:SetPoint("BOTTOMLEFT",chatFrame1,"BOTTOMRIGHT",0,0)
 -- 图片解析
 local function filter(self, event, msg, ...)
 	for i = 1, iconNums do --每条msg都会跑#emotes次，看看能否优化
+		-- print(msg:find(emotes[i].text))
 		if msg:find(emotes[i].text) then
+			-- print(msg)
 			msg = msg:gsub(emotes[i].text,format("|T%s:20|t",BASE_SITE..emotes[i].icon),1)
+			-- print(msg)
 		end
 	end
 	return false, msg, ...
@@ -208,8 +212,14 @@ local function IconMouseUp(self,button)
 			ChatEdit_ActivateChat(editBox)
 		end
 		editBox:Insert(self.text)
+		ToggleEmote()
+	elseif button == "RightButton" then
+		local editBox = ChatEdit_ChooseBoxForSend()
+		if (not editBox:IsShown()) then
+			ChatEdit_ActivateChat(editBox)
+		end
+		editBox:Insert(self.text)
 	end
-	ToggleEmote()
 end
 
 local function CreateEmoteTable()
@@ -218,7 +228,7 @@ local function CreateEmoteTable()
 	EmoteTable = CreateFrame("Frame","EmoteTable",EmoteFrame)
 	EmoteTable:SetSize(iconSize*row+iconSpace*(row+1), iconSize*col + iconSpace*(col+1))
 	EmoteTable:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=1})
-	EmoteTable:SetBackdropColor(.5,.5,.5,0)
+	EmoteTable:SetBackdropColor(0,0,0,.5)
 	EmoteTable:SetBackdropBorderColor(.5,.5,.5,.5)
 	EmoteTable:SetPoint("BOTTOMLEFT",EmoteFrame,"TOPLEFT",0,5)
 	-- framestrata
