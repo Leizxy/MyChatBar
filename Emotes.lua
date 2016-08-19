@@ -67,11 +67,84 @@ info.emotes = {
 	{ text="{猥琐}", 	icon = "ugly" },
 	{ text="{胜利}", 	icon = "victory" },
 	{ text="{雷锋}", 	icon = "volunteer" },
-	{ text="{委屈}", 	icon = "wronged" },
-	
-	{ text="{汗}",		icon = "emoji1"}
-	,{ text="{emoji2}",		icon = "emoji2"}
-	,{ text="{emoji3}",		icon = "emoji3"}
+	{ text="{委屈}", 	icon = "wronged" }
+	-- 1~10
+	,{ text="{angry}",		icon = "emoji_angry"}
+	,{ text="{anguish}",	icon = "emoji_anguished"}
+	,{ text="{astonish}",	icon = "emoji_astonished"}
+	,{ text="{bandage}",	icon = "emoji_bandage"}
+	,{ text="{smile}",		icon = "emoji_bigsmile"}
+	,{ text="{kiss}",		icon = "emoji_closedeyekiss"}
+	,{ text="{coldsweat}",	icon = "emoji_coldsweat"}
+	,{ text="{confound}",	icon = "emoji_confounded"}
+	,{ text="{confuse}",	icon = "emoji_confused"}
+	,{ text="{cry}",		icon = "emoji_crying"}
+	-- 11~20
+	,{ text="{delicious}",		icon = "emoji_delicious"}
+	,{ text="{disappoint}",		icon = "emoji_disappointed"}
+	,{ text="{disappointed}",	icon = "emoji_disappointed2"}
+	,{ text="{dizzy}",			icon = "emoji_dizzy"}
+	,{ text="{fearful}",		icon = "emoji_fearful"}
+	,{ text="{flushed}",		icon = "emoji_flushed"}
+	,{ text="{frowning}",		icon = "emoji_frowning"}
+	,{ text="{smile2}",			icon = "emoji_glassessmile"}
+	,{ text="{grimace}",		icon = "emoji_grimacing"}
+	,{ text="{grin}",			icon = "emoji_grinning"}
+	-- 21~30
+	,{ text="{grinsmile}",		icon = "emoji_grinningsmile"}
+	,{ text="{halosmile}",		icon = "emoji_halosmile"}
+	,{ text="{heart-shaped}",	icon = "emoji_heart_shaped"}
+	,{ text="{hug}",			icon = "emoji_hugging"}
+	,{ text="{hush}",			icon = "emoji_hushed"}
+	,{ text="{imp}",			icon = "emoji_imp"}
+	,{ text="{kiss2}",			icon = "emoji_kissing"}
+	,{ text="{loudcry}",		icon = "emoji_loudlycry"}
+	,{ text="{mask}",			icon = "emoji_medicalmask"}
+	,{ text="{money}",			icon = "emoji_money"}
+	-- 31~40
+	,{ text="{nerd}",			icon = "emoji_nerd"}
+	,{ text="{neutral}",		icon = "emoji_neutral"}
+	,{ text="{noexpression}",	icon = "emoji_noexpression"}
+	,{ text="{nomouth}",		icon = "emoji_nomouth"}
+	,{ text="{openmouth}",		icon = "emoji_openmouth"}
+	,{ text="{pensive}",		icon = "emoji_pensive"}
+	,{ text="{persever}",		icon = "emoji_persevering"}
+	,{ text="{pout}",			icon = "emoji_pouting"}
+	,{ text="{relieved}",		icon = "emoji_relieved"}
+	,{ text="{rolleye}",		icon = "emoji_rollingeyes"}
+	-- 41~50
+	,{ text="{scream}",		icon = "emoji_screaming"}
+	,{ text="{sleep}",		icon = "emoji_sleep"}
+	,{ text="{sleepy}",		icon = "emoji_sleepy"}
+	,{ text="{frown}",		icon = "emoji_slightlyfrown"}
+	,{ text="{smile3}",		icon = "emoji_slightlysmile"}
+	,{ text="{smile4}",		icon = "emoji_smileclosedeye"}
+	,{ text="{smile5}",		icon = "emoji_smilefaceeye"}
+	,{ text="{smile6}",		icon = "emoji_smilefaceeyeandmouth"}
+	,{ text="{horn}",		icon = "emoji_smilehorn"}
+	,{ text="{kiss}",		icon = "emoji_smilekiss"}
+	-- 51~60
+	,{ text="{smirk}",			icon = "emoji_smirking"}
+	,{ text="{smile7}",			icon = "emoji_sweatsmile"}
+	,{ text="{sweat2}",			icon = "emoji_sweatwithmouth"}
+	,{ text="{笑哭}",			icon = "emoji_tearsofjoy"}
+	,{ text="{thermometer}",	icon = "emoji_thermometer"}
+	,{ text="{think}",			icon = "emoji_thinking"}
+	,{ text="{飞吻}",			icon = "emoji_throwingkiss"}
+	,{ text="{tired}",			icon = "emoji_tired"}
+	,{ text="{tongue}",			icon = "emoji_tongue"}
+	,{ text="{tongue2}",		icon = "emoji_tongueclosedeye"}
+	-- 61~70
+	,{ text="{tongue3}",		icon = "emoji_tonguewinkingeye"}
+	,{ text="{triumph}",		icon = "emoji_triumph"}
+	,{ text="{unamused}",		icon = "emoji_unamused"}
+	,{ text="{upsidedown}",		icon = "emoji_upsidedown"}
+	,{ text="{weary}",			icon = "emoji_weary"}
+	,{ text="{frown2}",			icon = "emoji_whitefrown"}
+	,{ text="{smile8}",			icon = "emoji_whitesmile"}
+	,{ text="{wink}",			icon = "emoji_winking"}
+	,{ text="{worry}",			icon = "emoji_worried"}
+	,{ text="{zipper}",			icon = "emoji_zippermouth"}
 }
 local emotes = info.emotes
 local BASE_SITE = "Interface\\AddOns\\"..MyChatBar.."\\icon\\"

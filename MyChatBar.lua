@@ -200,25 +200,36 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 		addChannels(self)
 	end
 end)
--- TODO 非全屏下会一直刷新
-MyChatBarFrame:SetScript("OnUpdate",function(self,t)
-	addChannels(self)
-	-- print("MyChatBarFrame")
-end)
-
+-- 
 MyChatBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 MyChatBarFrame:RegisterEvent("PLAYER_LOGIN")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 MyChatBarFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+
+--[[ 解决方式不太好
+
+local interval = 0.1
+MyChatBarFrame:SetScript("OnUpdate",function(self,t)
+	interval = interval - t
+	if interval < 0 then
+		addChannels(self)
+		interval = 10
+	end
+	-- print("MyChatBarFrame")
+end)
+
+
 
 do
 	local add
 	add = chatFrame1.AddMessage
 	local function AddMessage(self,text,...)
 		-- TODO other channel
+		-- interval = 0.1
 		text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
 		text = gsub(text, "%[(%d0?)%..-%]", "%1.")
 		return add(self,text,...)
 	end
 	chatFrame1.AddMessage = AddMessage
 end
+]]
