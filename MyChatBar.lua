@@ -200,7 +200,7 @@ MyChatBarFrame:SetScript("OnEvent",function(self,event,...)
 		addChannels(self)
 	end
 end)
-
+-- TODO 非全屏下会一直刷新
 MyChatBarFrame:SetScript("OnUpdate",function(self,t)
 	addChannels(self)
 	-- print("MyChatBarFrame")
