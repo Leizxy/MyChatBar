@@ -208,7 +208,7 @@ MyChatBarFrame:RegisterEvent("PLAYER_LOGIN")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 MyChatBarFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
---[[ 解决方式不太好
+-- [[ 解决方式不太好
 
 local interval = 0.1
 MyChatBarFrame:SetScript("OnUpdate",function(self,t)
@@ -234,4 +234,3 @@ do
 	end
 	chatFrame1.AddMessage = AddMessage
 end
-]]
