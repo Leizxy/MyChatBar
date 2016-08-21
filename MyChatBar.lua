@@ -131,6 +131,8 @@ local function ShowChannelButtons(channels)
 		cButton.tbChannel = channels[i]
 		if (channels[i].text == "大脚世界频道") then
 			cButton.text:SetText(string.sub(textString,7,9))
+		elseif (channels[i].text == "团队通知") then
+			cButton.text:SetText(string.sub(textString,7,9))
 		else
 			cButton.text:SetText(string.sub(textString,1,3))
 		end
