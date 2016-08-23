@@ -228,6 +228,7 @@ do
 	local function AddMessage(self,text,...)
 		-- TODO other channel
 		-- interval = 0.1
+		-- if text:find()
 		text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
 		text = gsub(text, "%[(%d0?)%..-%]", "%1.")
 		return add(self,text,...)
