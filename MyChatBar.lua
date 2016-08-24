@@ -229,8 +229,16 @@ do
 		-- TODO other channel
 		-- interval = 0.1
 		-- if text:find()
-		text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
-		text = gsub(text, "%[(%d0?)%..-%]", "%1.")
+		-- utf-8字符集，3个8位表示一个汉字
+		if strfind(text, "大脚世界频道") then
+			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
+			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
+		else
+			text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
+		end
+		-- text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
+		-- text = gsub(text, "%[(%d0?)%..-%]", "%1.")
 		return add(self,text,...)
 	end
 	chatFrame1.AddMessage = AddMessage
