@@ -208,7 +208,6 @@ MyChatBarFrame:RegisterEvent("PLAYER_LOGIN")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 MyChatBarFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
--- [[ 解决方式不太好
 
 local interval = 0.1
 MyChatBarFrame:SetScript("OnUpdate",function(self,t)
@@ -220,7 +219,7 @@ MyChatBarFrame:SetScript("OnUpdate",function(self,t)
 	-- print("MyChatBarFrame")
 end)
 
-
+-- short channel
 
 do
 	local add
@@ -234,7 +233,11 @@ do
 			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
 			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
 		else
-			text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+		-- if strfind(text, "综合") then
+			-- print(text)
+			text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
+			-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+			-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
 			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
 		end
 		-- text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
