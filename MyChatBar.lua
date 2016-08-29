@@ -123,6 +123,7 @@ local function ShowChannelButtons(channels)
 			cButton.text = cButton:CreateFontString(nil,"ARTWORK")
 			cButton.text:SetFont(UNIT_NAME_FONT, 14, "THINOUTLINE")
 			cButton.text:SetShadowOffset(1,-1)
+			cButton.text:SetShadowColor(0, 0, 0, 0.5)
 			cButton.text:SetPoint("CENTER", cButton, "CENTER", 0, 0)
 			cButton.text:SetJustifyH("CENTER")
 			
