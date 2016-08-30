@@ -44,7 +44,8 @@ end
 	-- end
 -- end
 --[[
-	ChatTypeInfo["SAY"] -- 一些说频道的属性
+getmetatable(ChatTypeInfo).__index[]
+	ChatTypeInfo["RAIDWARNING"] -- 一些说频道的属性
 	{colorNameByClass=true,
 	flashTab=false,
 	b=1,r=1,g=1,
@@ -226,23 +227,18 @@ do
 	local add
 	add = chatFrame1.AddMessage
 	local function AddMessage(self,text,...)
-		-- TODO other channel
-		-- interval = 0.1
-		-- if text:find()
+		-- ...
+		-- 1:r,2:g,3:b
 		-- utf-8字符集，3个8位表示一个汉字
 		if strfind(text, "大脚世界频道") then
 			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
 			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
 		else
-		-- if strfind(text, "综合") then
-			-- print(text)
 			text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
 			-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
 			-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
 			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
 		end
-		-- text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
-		-- text = gsub(text, "%[(%d0?)%..-%]", "%1.")
 		return add(self,text,...)
 	end
 	chatFrame1.AddMessage = AddMessage
@@ -251,9 +247,35 @@ end
 -- 聊天框字描边
 
 for i = 1, 7 do
+	-- print(_G["ChatFrame1"]:GetObjectType())
     local chat = _G["ChatFrame"..i]
     local font, size = chat:GetFont()
     chat:SetFont(font, size, "OUTLINE")
     chat:SetShadowOffset(0, 0)
-    chat:SetShadowColor(0, 0, 0, 0)
+    chat:SetShadowColor(0, 0, 0, 1)
+	_G["ChatFrame"..i.."Background"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBackground"]:SetTexture(0,0,0,0)
+	
+	_G["ChatFrame"..i.."LeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."RightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomRightTexture"]:SetTexture(0,0,0,0)
+	chat:SetBackdropBorderColor(0,0,0,0)
+	-- chat:
+	-- /dump print(_G["ChatFrame1Background"]:GetObjectType())
+	-- chat:SetJustifyH("CENTER")
+	-- chat:SetBackdropColor(0,0,0,0)
+	-- FCF_SetWindowAlpha(ChatFrame1,0)
 end
