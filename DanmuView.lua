@@ -38,50 +38,88 @@ local UIWidth,UIHeight = UIParent:GetWidth(),UIParent:GetHeight()
 local DanmuView = CreateFrame("Frame","DanmuView",UIParent)
 DanmuView:SetSize(UIWidth,UIHeight/2)
 DanmuView:SetPoint("BOTTOM",UIParent,"CENTER",0,0)
--- DanmuView:SetFrameStrata("HIGH")
+DanmuView:SetFrameStrata("BACKGROUND")
 
 
-local FONT = {"Fonts\\ARHei.ttf",28,"OUTLINE"}
-local DURATION = 5
+local FONT = {"Fonts\\ARHei.ttf",20,"OUTLINE"}
+local DURATION = 22
 local COUNT_V = 10
 
 local function AddAnimToDanmu(frame)
+	-- print("AddAnimToDanmu")
 	frame.group = frame:CreateAnimationGroup(frame:GetName().."_group",nil)
 	local translation = frame.group:CreateAnimation("Translation",frame:GetName().."_trans",nil)
 	translation:SetDuration(DURATION)
 	translation:SetOffset(-UIWidth-frame:GetWidth(),0)
-	translation:SetTarget(frame)
-	translation:SetStartDelay(0.5)
-	translation:SetSmoothing("IN")
+	translation:SetTarget(frame.text)
+	-- translation:SetStartDelay(0.5)
+	translation:SetSmoothing("NONE")
 	frame.group:SetLooping("NONE")
 	frame.group:Play()
-	if frame.group:IsDone() then
-		
-	end
+	frame:SetScript("OnUpdate",function(self,t)
+		if translation:IsDone() then
+			-- print("done")
+			-- frame = nil
+			-- frame:Hide()
+			frame.text = nil
+			-- print(frame.text:GetText())
+		end
+	end)
 end
 
 local danmuText = {}
 local danmu = {}
 
-local function CreateDanmu(i)
+local function CreateDanmu(i,...)
+	-- print("CreateDanmu")
+	local r,g,b,alph = select(1,...)
 	danmu[i] = CreateFrame("Frame","danmu"..i,DanmuView)
 	danmu[i].text = danmu[i]:CreateFontString(nil,"OVERLAY")
 	danmu[i].text:SetFont(unpack(FONT))
 	danmu[i].text:SetText(danmuText[i])
+	danmu[i].text:SetTextColor(r,g,b,alph)
+	-- danmu[i].text:SetText("test")
 	danmu[i]:SetAllPoints(danmu[i].text)
-	danmu[i].text:SetPoint("TOPLEFT",DanmuView,"TOPRIGHT",0, (i%COUNT_V == 0 and 10 or i%COUNT_V)*40 + 50) --坐标
+	danmu[i].text:SetPoint("TOPLEFT",DanmuView,"TOPRIGHT",0, -((i%COUNT_V == 0 and 10 or i%COUNT_V)*40 + 50)) --坐标
 	AddAnimToDanmu(danmu[i])
 end
+-- /dump _G["danmuText"][1]
 
 local i = 1
 local ChatFrame1 = _G["ChatFrame1"]
 local add = ChatFrame1.AddMessage
 ChatFrame1.AddMessage = function(self,text,...)
-	if strfind(text,"说") then
-		danmuText[i] = text
-		CreateDanmu(i)
-		i = i + 1
+	-- print(select(1,...))
+	-- local str = text
+	-- print(text)
+	-- print((select(1,...)))
+	if (select(1,...)) then
+		-- print(text)
+		if strfind(text,"%].-说：") or 
+		strfind(text,"发送.-%[.-") or 
+		strfind(text,"%]喊：") or 
+		strfind(text,"%[.-队.-%]") or 
+		strfind(text,"%[公会%]") then
+			-- print(select(1,...))
+			-- print(text)
+			danmuText[i] = text
+			-- print(text)
+			CreateDanmu(i,...)
+			-- print(i)
+			i = i + 1
+			-- print(i)
+		end
 	end
+	-- shortChannel
+	if strfind(text, "大脚世界频道") then
+			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
+			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
+		else
+			text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
+			-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+			-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
+			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
+		end
 	return add(self,text,...)
 end
 

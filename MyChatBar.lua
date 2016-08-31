@@ -222,14 +222,16 @@ MyChatBarFrame:SetScript("OnUpdate",function(self,t)
 end)
 
 -- short channel
-
+--[[
 do
 	local add
 	add = chatFrame1.AddMessage
 	local function AddMessage(self,text,...)
 		-- ...
+		-- print(select(1,...))
 		-- 1:r,2:g,3:b
 		-- utf-8字符集，3个8位表示一个汉字
+		-- print(text)
 		if strfind(text, "大脚世界频道") then
 			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
 			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
@@ -243,6 +245,7 @@ do
 	end
 	chatFrame1.AddMessage = AddMessage
 end
+]]
 
 -- 聊天框字描边及背景透明，鼠标移上去也透明
 
