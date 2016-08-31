@@ -244,7 +244,7 @@ do
 	chatFrame1.AddMessage = AddMessage
 end
 
--- 聊天框字描边
+-- 聊天框字描边及背景透明，鼠标移上去也透明
 
 for i = 1, 7 do
 	-- print(_G["ChatFrame1"]:GetObjectType())
