@@ -30,7 +30,6 @@
                   别人笑我忒疯癫，我笑自己命太贱；    
                   不见满街漂亮妹，哪个归得程序员？  
 ]]
-
 local Addon = ...
 
 local UIWidth,UIHeight = UIParent:GetWidth(),UIParent:GetHeight()
@@ -40,10 +39,13 @@ DanmuView:SetSize(UIWidth,UIHeight/2)
 DanmuView:SetPoint("BOTTOM",UIParent,"CENTER",0,0)
 DanmuView:SetFrameStrata("BACKGROUND")
 
-
-local FONT = {"Fonts\\ARHei.ttf",20,"OUTLINE"}
-local DURATION = 22
+local DANMU_ALPHA = 0.8 -- 0 ~ 1.0
+local DANMU_FONT_SIZE = 20
+local FONT = {"Fonts\\ARHei.ttf",DANMU_FONT_SIZE,"OUTLINE"}
+local DURATION = 25  -- 弹幕在显示区域划过的时间。建议20s以上
 local COUNT_V = 10
+local SHOW_DANMU = true -- 是否打开弹幕(再加上频道过滤？)
+
 
 local function AddAnimToDanmu(frame)
 	-- print("AddAnimToDanmu")
@@ -58,11 +60,7 @@ local function AddAnimToDanmu(frame)
 	frame.group:Play()
 	frame:SetScript("OnUpdate",function(self,t)
 		if translation:IsDone() then
-			-- print("done")
-			-- frame = nil
-			-- frame:Hide()
-			frame.text = nil
-			-- print(frame.text:GetText())
+			table.remove(danmu,gsub(frame:GetName(),"danmu",""))
 		end
 	end)
 end
@@ -72,15 +70,16 @@ local danmu = {}
 
 local function CreateDanmu(i,...)
 	-- print("CreateDanmu")
-	local r,g,b,alph = select(1,...)
+	local r,g,b = select(1,...)
 	danmu[i] = CreateFrame("Frame","danmu"..i,DanmuView)
+	danmu[i]:SetFrameStrata("HIGH")
 	danmu[i].text = danmu[i]:CreateFontString(nil,"OVERLAY")
 	danmu[i].text:SetFont(unpack(FONT))
 	danmu[i].text:SetText(danmuText[i])
-	danmu[i].text:SetTextColor(r,g,b,alph)
+	danmu[i].text:SetTextColor(r,g,b,DANMU_ALPHA)
 	-- danmu[i].text:SetText("test")
 	danmu[i]:SetAllPoints(danmu[i].text)
-	danmu[i].text:SetPoint("TOPLEFT",DanmuView,"TOPRIGHT",0, -((i%COUNT_V == 0 and 10 or i%COUNT_V)*40 + 50)) --坐标
+	danmu[i].text:SetPoint("TOPLEFT",DanmuView,"TOPRIGHT",0, -((i%COUNT_V == 0 and COUNT_V or i%COUNT_V)*40 + 50)) --坐标
 	AddAnimToDanmu(danmu[i])
 end
 -- /dump _G["danmuText"][1]
@@ -89,25 +88,20 @@ local i = 1
 local ChatFrame1 = _G["ChatFrame1"]
 local add = ChatFrame1.AddMessage
 ChatFrame1.AddMessage = function(self,text,...)
-	-- print(select(1,...))
-	-- local str = text
-	-- print(text)
-	-- print((select(1,...)))
 	if (select(1,...)) then
-		-- print(text)
-		if strfind(text,"%].-说：") or 
+		if 
+		strfind(text,"%].-说：") or 
 		strfind(text,"发送.-%[.-") or 
 		strfind(text,"%]喊：") or 
-		strfind(text,"%[.-队.-%]") or 
-		strfind(text,"%[公会%]") then
-			-- print(select(1,...))
-			-- print(text)
-			danmuText[i] = text
-			-- print(text)
-			CreateDanmu(i,...)
-			-- print(i)
-			i = i + 1
-			-- print(i)
+		strfind(text,"%[.-队.-%]%[") or 
+		strfind(text,"%[公会%]%[") or
+		strfind(text,"%[官员%]%[") 
+		then
+			if SHOW_DANMU then
+				danmuText[i] = text
+				CreateDanmu(i,...)
+				i = i + 1
+			end
 		end
 	end
 	-- shortChannel
@@ -132,7 +126,8 @@ function Chat_GetColoredChatName(chatType, chatTarget)
 		local info = ChatTypeInfo["CHANNEL"..chatTarget];
 		local colorString = format("|cff%02x%02x%02x", info.r * 255, info.g * 255, info.b * 255);
 		local chanNum, channelName = GetChannelName(chatTarget);
-		return format("%s|Hchannel:channel:%d|h[%d. %s]|h|r", colorString, chanNum, chanNum, gsub(channelName, "%s%-%s.*", ""));	--The gsub removes zone-specific markings (e.g. "General - Ironforge" to "General")
+		return format("%s|Hchannel:channel:%d|h[%d. %s]|h|r", colorString, chanNum, chanNum, gsub(channelName, "%s%-%s.*", ""));
+		--The gsub removes zone-specific markings (e.g. "General - Ironforge" to "General")
 	elseif ( chatType == "WHISPER" ) then
 		local info = ChatTypeInfo["WHISPER"];
 		local colorString = format("|cff%02x%02x%02x", info.r * 255, info.g * 255, info.b * 255);
