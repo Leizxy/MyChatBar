@@ -60,7 +60,7 @@ local function AddAnimToDanmu(frame)
 	frame.group:Play()
 	frame:SetScript("OnUpdate",function(self,t)
 		if translation:IsDone() then
-			table.remove(danmu,gsub(frame:GetName(),"danmu",""))
+			-- table.remove(danmu,gsub(frame:GetName(),"danmu",""))
 		end
 	end)
 end
@@ -83,6 +83,8 @@ local function CreateDanmu(i,...)
 	AddAnimToDanmu(danmu[i])
 end
 -- /dump _G["danmuText"][1]
+-- /dump _G["GuildRosterContainerButton12String1"]:SetWidth(30)
+-- OrderHallCommandBar
 
 local i = 1
 local ChatFrame1 = _G["ChatFrame1"]
@@ -93,9 +95,9 @@ ChatFrame1.AddMessage = function(self,text,...)
 		strfind(text,"%].-说：") or 
 		strfind(text,"发送.-%[.-") or 
 		strfind(text,"%]喊：") or 
-		strfind(text,"%[.-队.-%]%[") or 
-		strfind(text,"%[公会%]%[") or
-		strfind(text,"%[官员%]%[") 
+		strfind(text,"%[.-队.-%].-%[") or 
+		strfind(text,"%[公会%].-%[") or
+		strfind(text,"%[官员%].-%[") 
 		then
 			if SHOW_DANMU then
 				danmuText[i] = text
