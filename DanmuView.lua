@@ -46,7 +46,7 @@ local DURATION = 25  -- 弹幕在显示区域划过的时间。建议20s以上
 local COUNT_V = 10
 local SHOW_DANMU = true -- 是否打开弹幕(再加上频道过滤？)
 local MSG_FILTER = {
-"大脚任务提示："
+"大脚任务进度提示："
 }
 
 local function AddAnimToDanmu(frame)
@@ -63,8 +63,8 @@ local function AddAnimToDanmu(frame)
 	frame:SetScript("OnUpdate",function(self,t)
 		if translation:IsDone() then
 			if frame ~= nil then
-				table.remove(danmu,gsub(frame:GetName(),"danmu",""))
-				table.remove(danmuText,gsub(frame:GetName(),"danmu",""))
+				-- table.remove(danmu,gsub(frame:GetName(),"danmu",""))
+				-- table.remove(danmuText,gsub(frame:GetName(),"danmu",""))
 			end
 		end
 	end)
@@ -101,21 +101,12 @@ end
 local ChatFrame1 = _G["ChatFrame1"]
 local add = ChatFrame1.AddMessage
 ChatFrame1.AddMessage = function(self,text,...)
-	-- shortChannel
-	if strfind(text, "大脚世界频道") then
-		text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
-		-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
-	else
-		text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
-		-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
-		-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
-		-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
-	end
+	
 	if (select(1,...)) then
 		if 
 		strfind(text,"%[.-%].-说：") or -- SAY,WHISPER(from)
 		strfind(text,"发送.-%[.-%]") or -- WHISPER(to)
-		strfind(text,"%[.-%]喊：") or -- YELL
+		strfind(text,"%[.-%].-喊道：") or -- YELL
 		strfind(text,"%[.-队.-%].-%[-.%]") or -- PARTY(LEADER),RAID(LEADER,WARNING)
 		strfind(text,"%[公会%].-%[-.%]") or -- GUILD
 		strfind(text,"%[官员%].-%[-.%]") -- OFFICER
@@ -128,13 +119,23 @@ ChatFrame1.AddMessage = function(self,text,...)
 				local i = 1
 				-- i = i + 1
 				-- test
-				while danmu[i] == nil do
+				while danmu[i] ~= nil do
 					i = i + 1
 				end
 				danmuText[i] = text
 				CreateDanmu(i,...)
 			end
 		end
+	end
+	-- shortChannel
+	if strfind(text, "大脚世界频道") then
+		text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
+		-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
+	else
+		text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
+		-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+		-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
+		-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
 	end
 	return add(self,text,...)
 end

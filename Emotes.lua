@@ -235,8 +235,8 @@ EmoteFrame:SetScript("OnMouseDown",function(self,button)
 		ToggleEmote(page) 		
 	end
 end)
--- EmoteFrame:SetScript("OnEnter",function() countdown = 5 end)
--- EmoteFrame:SetScript("OnLeave",function() end)
+EmoteFrame:SetScript("OnEnter",function() countdown = 5 end)
+EmoteFrame:SetScript("OnLeave",function() end)
 -- 聊天气泡
 local MaxWidth = 240
 local function BubbleEmote(frame, region)
@@ -264,36 +264,11 @@ local function BubbleEmote(frame, region)
 		end
 	end
 	region:SetText(text)
+	-- print(text)
 	region.cachedText = text
 	region:SetWidth(math.min(region:GetStringWidth(),MaxWidth))
 end
-
-local interval = 0.1
-EmoteFrame:SetScript("OnUpdate",function(self, t)
-	interval = interval - t
-	countdown = countdown - t
-	if interval < 0 then
-		interval = 0.1
-		for i = 1,WorldFrame:GetNumChildren() do
-			local childFrame = select(i, WorldFrame:GetChildren())
-			if childFrame:GetBackdrop() and 
-			childFrame:GetBackdrop().bgFile == "Interface\\Tooltips\\ChatBubble-Background" then
-				for j = 1, childFrame:GetNumRegions() do
-					local region = select(j, childFrame:GetRegions())
-					if region:GetObjectType() == "FontString" then
-						BubbleEmote(childFrame, region)
-					end
-				end
-			end
-		end
-	end
-	if countdown < 0 then
-		if EmoteTable1 ~= nil then EmoteTable1:Hide() end
-		if EmoteTable2 ~= nil then EmoteTable2:Hide() end
-		-- EmoteTable2:Hide()
-	end
-end)
--- RAID_CLASS_COLORS[select(2,UnitClass("player"))]
+-- breathColor
 local r,g,b = 0,0,0
 local turn = false
 local function breathColor(t)
@@ -335,7 +310,30 @@ local function breathColor(t)
 	EmoteFrame:SetBackdropBorderColor(r,g,b,1)
 	
 end
-EmoteFrame:SetScript("OnUpdate",function(self,t)
-	-- print(t)
+local interval = 0.1
+EmoteFrame:SetScript("OnUpdate",function(self, t)
+	interval = interval - t
+	countdown = countdown - t
+	if interval < 0 then
+		interval = 0.1
+		for i = 1,WorldFrame:GetNumChildren() do
+			local childFrame = select(i, WorldFrame:GetChildren())
+			if childFrame:GetBackdrop() and 
+			childFrame:GetBackdrop().bgFile == "Interface\\Tooltips\\ChatBubble-Background" then
+				for j = 1, childFrame:GetNumRegions() do
+					local region = select(j, childFrame:GetRegions())
+					if region:GetObjectType() == "FontString" then
+						BubbleEmote(childFrame, region)
+					end
+				end
+			end
+		end
+	end
+	if countdown < 0 then
+		if EmoteTable1 ~= nil then EmoteTable1:Hide() end
+		if EmoteTable2 ~= nil then EmoteTable2:Hide() end
+		-- EmoteTable2:Hide()
+	end
 	breathColor(t)
 end)
+-- RAID_CLASS_COLORS[select(2,UnitClass("player"))]
