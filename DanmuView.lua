@@ -30,7 +30,7 @@
                   别人笑我忒疯癫，我笑自己命太贱；    
                   不见满街漂亮妹，哪个归得程序员？  
 ]]
-local Addon, = ...
+local Addon, info = ...
 
 local UIWidth,UIHeight = UIParent:GetWidth(),UIParent:GetHeight()
 -- 各弹幕附着的Frame,其实可以考虑不需要这个,可以用来控制显示与否
@@ -49,6 +49,8 @@ local MSG_FILTER = {
 "大脚任务进度提示：",
 "<大脚组队提示>"
 }
+local danmuText = {}
+local danmu = {}
 
 local function AddAnimToDanmu(frame,i)
 	-- print("AddAnimToDanmu")
@@ -63,7 +65,7 @@ local function AddAnimToDanmu(frame,i)
 	frame.group:Play()
 	frame:SetScript("OnUpdate",function(self,t)
 		--表情
-		self.text:SetText(danmuText[i])
+		-- self.text:SetText(danmuText[i])
 		
 		if translation:IsDone() then
 			self.haveData = false
@@ -75,8 +77,7 @@ local function AddAnimToDanmu(frame,i)
 	end)
 end
 
-local danmuText = {}
-local danmu = {}
+
 
 local function CreateDanmu(i,...)
 	-- print("CreateDanmu")
@@ -87,7 +88,7 @@ local function CreateDanmu(i,...)
 		danmu[i].text = danmu[i]:CreateFontString(nil,"OVERLAY")
 		danmu[i].text:SetFont(unpack(FONT))
 	end
-	-- danmu[i].text:SetText(danmuText[i])
+	danmu[i].text:SetText(danmuText[i])
 	danmu[i].text:SetTextColor(r,g,b,DANMU_ALPHA)
 	-- danmu[i].text:SetText("test")
 	danmu[i]:SetAllPoints(danmu[i].text)
@@ -112,12 +113,12 @@ ChatFrame1.AddMessage = function(self,text,...)
 	
 	if (select(1,...)) then
 		if 
-		strfind(text,"%[.-%].?说：") or -- SAY,WHISPER(from)
-		strfind(text,"发送给.?%[.-%]") or -- WHISPER(to)
-		strfind(text,"%[.-%].?喊道：") or -- YELL
-		strfind(text,"%[.-队.-%]%s%[.-%]") or -- PARTY(LEADER),RAID(LEADER,WARNING)
-		strfind(text,"%[公会%].?%[.-%]") or -- GUILD
-		strfind(text,"%[官员%].?%[.-%]") -- OFFICER
+		strfind(text,"%[.-%].-说：?") or -- SAY,WHISPER(from)
+		strfind(text,"发送给.-%[.-%]：?") or -- WHISPER(to)
+		strfind(text,"%[.-%].-喊道：?") or -- YELL
+		strfind(text,"%[.-队.-%].-%[.-%]?") or -- PARTY(LEADER),RAID(LEADER,WARNING)
+		strfind(text,"%[公会%].-%[.-%]?") or -- GUILD
+		strfind(text,"%[官员%].-%[.-%]?") -- OFFICER
 		then
 			if SHOW_DANMU 
 			-- and not (strfind(text,"过滤条件"))
@@ -129,9 +130,9 @@ ChatFrame1.AddMessage = function(self,text,...)
 				while danmu[i] ~= nil do
 					if danmu[i].haveData then
 						i = i + 1
-						if i % 5 == 0 then
-							print(i)
-						end
+						-- if i % 5 == 0 then
+							-- print(i)
+						-- end
 					else 
 						break
 					end
