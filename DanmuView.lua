@@ -30,7 +30,7 @@
                   别人笑我忒疯癫，我笑自己命太贱；    
                   不见满街漂亮妹，哪个归得程序员？  
 ]]
-local Addon = ...
+local Addon, = ...
 
 local UIWidth,UIHeight = UIParent:GetWidth(),UIParent:GetHeight()
 -- 各弹幕附着的Frame,其实可以考虑不需要这个,可以用来控制显示与否
@@ -46,10 +46,11 @@ local DURATION = 25  -- 弹幕在显示区域划过的时间。建议20s以上
 local COUNT_V = 10
 local SHOW_DANMU = true -- 是否打开弹幕(再加上频道过滤？)
 local MSG_FILTER = {
-"大脚任务进度提示："
+"大脚任务进度提示：",
+"<大脚组队提示>"
 }
 
-local function AddAnimToDanmu(frame)
+local function AddAnimToDanmu(frame,i)
 	-- print("AddAnimToDanmu")
 	frame.group = frame:CreateAnimationGroup(frame:GetName().."_group",nil)
 	local translation = frame.group:CreateAnimation("Translation",frame:GetName().."_trans",nil)
@@ -61,11 +62,15 @@ local function AddAnimToDanmu(frame)
 	frame.group:SetLooping("NONE")
 	frame.group:Play()
 	frame:SetScript("OnUpdate",function(self,t)
+		--表情
+		self.text:SetText(danmuText[i])
+		
 		if translation:IsDone() then
-			if frame ~= nil then
+			self.haveData = false
+			-- if self ~= nil then
 				-- table.remove(danmu,gsub(frame:GetName(),"danmu",""))
 				-- table.remove(danmuText,gsub(frame:GetName(),"danmu",""))
-			end
+			-- end
 		end
 	end)
 end
@@ -76,16 +81,19 @@ local danmu = {}
 local function CreateDanmu(i,...)
 	-- print("CreateDanmu")
 	local r,g,b = select(1,...)
-	danmu[i] = CreateFrame("Frame","danmu"..i,DanmuView)
-	danmu[i]:SetFrameStrata("HIGH")
-	danmu[i].text = danmu[i]:CreateFontString(nil,"OVERLAY")
-	danmu[i].text:SetFont(unpack(FONT))
-	danmu[i].text:SetText(danmuText[i])
+	if danmu[i] == nil then
+		danmu[i] = CreateFrame("Frame","danmu"..i,DanmuView)
+		danmu[i]:SetFrameStrata("HIGH")
+		danmu[i].text = danmu[i]:CreateFontString(nil,"OVERLAY")
+		danmu[i].text:SetFont(unpack(FONT))
+	end
+	-- danmu[i].text:SetText(danmuText[i])
 	danmu[i].text:SetTextColor(r,g,b,DANMU_ALPHA)
 	-- danmu[i].text:SetText("test")
 	danmu[i]:SetAllPoints(danmu[i].text)
 	danmu[i].text:SetPoint("TOPLEFT",DanmuView,"TOPRIGHT",0, -((i%COUNT_V == 0 and COUNT_V or i%COUNT_V)*40 + 50)) --坐标
-	AddAnimToDanmu(danmu[i])
+	danmu[i].haveData = true	
+	AddAnimToDanmu(danmu[i],i)
 end
 -- /dump _G["danmu1"]
 -- /dump _G["GuildRosterContainerButton12String1"]:SetWidth(30)
@@ -93,7 +101,7 @@ end
 local function filter(text,tb)
 	local boolean = true
 	for i = 1, #tb do
-		boolean = boolean and not strfind(text,tb[1])
+		boolean = boolean and not strfind(text,tb[i])
 	end
 	return boolean
 end
@@ -104,23 +112,29 @@ ChatFrame1.AddMessage = function(self,text,...)
 	
 	if (select(1,...)) then
 		if 
-		strfind(text,"%[.-%].-说：") or -- SAY,WHISPER(from)
-		strfind(text,"发送.-%[.-%]") or -- WHISPER(to)
-		strfind(text,"%[.-%].-喊道：") or -- YELL
-		strfind(text,"%[.-队.-%].-%[-.%]") or -- PARTY(LEADER),RAID(LEADER,WARNING)
-		strfind(text,"%[公会%].-%[-.%]") or -- GUILD
-		strfind(text,"%[官员%].-%[-.%]") -- OFFICER
+		strfind(text,"%[.-%].?说：") or -- SAY,WHISPER(from)
+		strfind(text,"发送给.?%[.-%]") or -- WHISPER(to)
+		strfind(text,"%[.-%].?喊道：") or -- YELL
+		strfind(text,"%[.-队.-%]%s%[.-%]") or -- PARTY(LEADER),RAID(LEADER,WARNING)
+		strfind(text,"%[公会%].?%[.-%]") or -- GUILD
+		strfind(text,"%[官员%].?%[.-%]") -- OFFICER
 		then
 			if SHOW_DANMU 
 			-- and not (strfind(text,"过滤条件"))
-			-- and not (strfind(text,"大脚任务提示："))
 			and filter(text,MSG_FILTER)
 			then
 				local i = 1
 				-- i = i + 1
 				-- test
 				while danmu[i] ~= nil do
-					i = i + 1
+					if danmu[i].haveData then
+						i = i + 1
+						if i % 5 == 0 then
+							print(i)
+						end
+					else 
+						break
+					end
 				end
 				danmuText[i] = text
 				CreateDanmu(i,...)
