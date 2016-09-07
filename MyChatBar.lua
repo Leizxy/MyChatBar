@@ -56,7 +56,17 @@ getmetatable(ChatTypeInfo).__index[]
 -- print(editBox:GetName())
 
 -- TODO
-
+local function getPlayerInformation()
+	-- ItemLevel
+	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
+	local LEVEL = "("..avgItemLevelEquipped.."/"..avgItemLevel..")"
+	-- Specialization
+	local currentSpec = GetSpecialization()
+	local SPEC = select(2,GetSpecializationInfo(currentSpec))
+	
+	
+	return string.format("装等:%s;专精:%s;",LEVEL,SPEC)
+end
 
 local function ShowChannelButtons(channels)
 	local cButton, cButtonName, textString
@@ -112,8 +122,14 @@ local function ShowChannelButtons(channels)
 							ChatFrame_ReplyTell(editBox.chatFrame)
 						end
 					elseif (tbChannel.channel == "ROLL") then
-						-- print("ROLL")
 						RandomRoll(1,100)
+					elseif (tbChannel.channel == "ATTRIBUTE") then
+						local editBox = ChatEdit_ChooseBoxForSend()
+						local playerInformation = getPlayerInformation()
+						if (not editBox:IsShow()) then
+							ChatEdit_ActivateChat(editBox)
+						end
+						editBox:Insert(playerInformation)
 					else
 						ChatFrame_OpenChat(tbChannel.input..context, editBox.chatFrame)
 					end
@@ -187,7 +203,8 @@ local function addChannels(self)
 	end
 	addOtherChannels(channels)
 	tinsert(channels, AllChannels[9])			--密语
-	tinsert(channels, {channel = "ROLL", input = "",text = "R"})
+	tinsert(channels, {channel = "ATTRIBUTE", input = "", text = "报"})	--装等
+	tinsert(channels, {channel = "ROLL", input = "", text = "R"})	--Roll
 	ShowChannelButtons(channels)
 end
 
@@ -236,7 +253,7 @@ do
 			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
 			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
 		else
-			text = gsub(text,"%d%. (.?.?.?).-%]","%1]")
+			text = gsub(text,"%d%. (.?.?.?).-%]",["%1]")
 			-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
 			-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
 			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
