@@ -126,7 +126,7 @@ local function ShowChannelButtons(channels)
 					elseif (tbChannel.channel == "ATTRIBUTE") then
 						local editBox = ChatEdit_ChooseBoxForSend()
 						local playerInformation = getPlayerInformation()
-						if (not editBox:IsShow()) then
+						if (not editBox:IsShown()) then
 							ChatEdit_ActivateChat(editBox)
 						end
 						editBox:Insert(playerInformation)

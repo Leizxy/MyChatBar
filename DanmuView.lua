@@ -46,7 +46,7 @@ local DURATION = 25  -- 弹幕在显示区域划过的时间。建议20s以上
 local COUNT_V = 10
 local SHOW_DANMU = true -- 是否打开弹幕(再加上频道过滤？)
 local MSG_FILTER = {
-"大脚任务进度提示：",
+"大脚任务进度提示",
 "<大脚组队提示>"
 }
 local danmuText = {}
