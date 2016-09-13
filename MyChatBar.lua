@@ -63,9 +63,14 @@ local function getPlayerInformation()
 	-- Specialization
 	local currentSpec = GetSpecialization()
 	local SPEC = select(2,GetSpecializationInfo(currentSpec))
+	-- Haste
+	local HASTE = GetHaste()
+	-- Crit
+	local CRIT = GetCritChance()
+	-- Mastery
+	local MASTERY = GetMastery()
 	
-	
-	return string.format("装等:%s;专精:%s;",LEVEL,SPEC)
+	return string.format("装等:%s;专精:%s;急速:%s;暴击:%s;精通:%s.",LEVEL,SPEC,HASTE,CRIT,MASTERY)
 end
 
 local function ShowChannelButtons(channels)
