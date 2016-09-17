@@ -44,7 +44,8 @@ end
 	-- end
 -- end
 --[[
-	ChatTypeInfo["SAY"] -- 一些说频道的属性
+getmetatable(ChatTypeInfo).__index[]
+	ChatTypeInfo["RAIDWARNING"] -- 一些说频道的属性
 	{colorNameByClass=true,
 	flashTab=false,
 	b=1,r=1,g=1,
@@ -55,7 +56,23 @@ end
 -- print(editBox:GetName())
 
 -- TODO
-
+-- /dump _G["GarrisonFollowerAlertFrame"]
+local function getPlayerInformation()
+	-- ItemLevel
+	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
+	-- local LEVEL = "("..avgItemLevelEquipped.."/"..avgItemLevel..")"
+	-- Specialization
+	local currentSpec = GetSpecialization()
+	local SPEC = select(2,GetSpecializationInfo(currentSpec))
+	-- Haste
+	local HASTE = GetHaste()
+	-- Crit
+	local CRIT = GetCritChance()
+	-- Mastery
+	local MASTERY = GetMastery()
+	return string.format("装等:(%.1f/%.1f); 专精:%s; 急速:%.2f; 暴击:%.2f; 精通:%.2f.",
+						avgItemLevelEquipped,avgItemLevel,SPEC,HASTE,CRIT,MASTERY)
+end
 
 local function ShowChannelButtons(channels)
 	local cButton, cButtonName, textString
@@ -111,8 +128,14 @@ local function ShowChannelButtons(channels)
 							ChatFrame_ReplyTell(editBox.chatFrame)
 						end
 					elseif (tbChannel.channel == "ROLL") then
-						-- print("ROLL")
 						RandomRoll(1,100)
+					elseif (tbChannel.channel == "ATTRIBUTE") then
+						local editBox = ChatEdit_ChooseBoxForSend()
+						local playerInformation = getPlayerInformation()
+						if (not editBox:IsShown()) then
+							ChatEdit_ActivateChat(editBox)
+						end
+						editBox:Insert(playerInformation)
 					else
 						ChatFrame_OpenChat(tbChannel.input..context, editBox.chatFrame)
 					end
@@ -123,6 +146,7 @@ local function ShowChannelButtons(channels)
 			cButton.text = cButton:CreateFontString(nil,"ARTWORK")
 			cButton.text:SetFont(UNIT_NAME_FONT, 14, "THINOUTLINE")
 			cButton.text:SetShadowOffset(1,-1)
+			cButton.text:SetShadowColor(0, 0, 0, 0.5)
 			cButton.text:SetPoint("CENTER", cButton, "CENTER", 0, 0)
 			cButton.text:SetJustifyH("CENTER")
 			
@@ -185,7 +209,8 @@ local function addChannels(self)
 	end
 	addOtherChannels(channels)
 	tinsert(channels, AllChannels[9])			--密语
-	tinsert(channels, {channel = "ROLL", input = "",text = "R"})
+	tinsert(channels, {channel = "ATTRIBUTE", input = "", text = "报"})	--装等
+	tinsert(channels, {channel = "ROLL", input = "", text = "R"})	--Roll
 	ShowChannelButtons(channels)
 end
 
@@ -208,7 +233,6 @@ MyChatBarFrame:RegisterEvent("PLAYER_LOGIN")
 MyChatBarFrame:RegisterEvent("CHAT_MSG_CHANNEL_NOTICE")
 MyChatBarFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
 
--- [[ 解决方式不太好
 
 local interval = 0.1
 MyChatBarFrame:SetScript("OnUpdate",function(self,t)
@@ -220,17 +244,64 @@ MyChatBarFrame:SetScript("OnUpdate",function(self,t)
 	-- print("MyChatBarFrame")
 end)
 
-
-
+-- short channel
+--[[
 do
 	local add
 	add = chatFrame1.AddMessage
 	local function AddMessage(self,text,...)
-		-- TODO other channel
-		-- interval = 0.1
-		text = gsub(text, "%[%d+%. 大脚世界频道.-%]", "[%1世界]")
-		text = gsub(text, "%[(%d0?)%..-%]", "%1.")
+		-- ...
+		-- print(select(1,...))
+		-- 1:r,2:g,3:b
+		-- utf-8字符集，3个8位表示一个汉字
+		-- print(text)
+		if strfind(text, "大脚世界频道") then
+			text = gsub(text, "%[%d+%. .?.?.?.?.?.?(.-).?.?.?.?.?.?%]","[%1]") -- [世界]
+			-- text = gsub(text, "%[(.-)%. .?.?.?.?(.-).?.?.?.?%]","[%1.%2]") -- [1.世界]
+		else
+			text = gsub(text,"%d%. (.?.?.?).-%]",["%1]")
+			-- text = gsub(text, "%[%d+%. (.?.?.?).+%]","[%1]") -- [综]
+			-- text = gsub(text, "%[%d+%. .+%]%[(.-)%]","[%1][%2]") -- [综]
+			-- text = gsub(text, "%[(.-)%. (.?.?).+%]","[%1.%2]")) -- [1. 综]
+		end
 		return add(self,text,...)
 	end
 	chatFrame1.AddMessage = AddMessage
+end
+]]
+
+-- 聊天框字描边及背景透明，鼠标移上去也透明
+
+for i = 1, 7 do
+	-- print(_G["ChatFrame1"]:GetObjectType())
+    local chat = _G["ChatFrame"..i]
+    local font, size = chat:GetFont()
+    chat:SetFont(font, size, "OUTLINE")
+    chat:SetShadowOffset(0, 0)
+    chat:SetShadowColor(0, 0, 0, 1)
+	_G["ChatFrame"..i.."Background"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBackground"]:SetTexture(0,0,0,0)
+	
+	_G["ChatFrame"..i.."LeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."RightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."TopRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."BottomRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameTopRightTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomLeftTexture"]:SetTexture(0,0,0,0)
+	_G["ChatFrame"..i.."ButtonFrameBottomRightTexture"]:SetTexture(0,0,0,0)
+	chat:SetBackdropBorderColor(0,0,0,0)
+	-- chat:
+	-- /dump print(_G["ChatFrame1Background"]:GetObjectType())
+	-- chat:SetJustifyH("CENTER")
+	-- chat:SetBackdropColor(0,0,0,0)
+	-- FCF_SetWindowAlpha(ChatFrame1,0)
 end

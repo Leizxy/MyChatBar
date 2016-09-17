@@ -5,4 +5,5 @@
 
 Emotes.lua
 MyChatBar.lua
-##ShortChannel.lua
+
+##DanmuView.lua

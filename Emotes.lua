@@ -99,9 +99,10 @@ local chatFrame1 = _G["ChatFrame1"]
 local EmoteFrame = CreateFrame("Frame","EmoteFrame",UIParent)
 local EmoteTable1,EmoteTable2
 EmoteFrame:SetSize(24,24)
-EmoteFrame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=1})
+EmoteFrame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=2})
 EmoteFrame:SetBackdropColor(0,0,0,.8)
-EmoteFrame:SetBackdropBorderColor(.63,.93,.26,1)
+-- EmoteFrame:SetBackdropBorderColor(.63,.93,.26,1)
+-- EmoteFrame:SetBackdropBorderColor(0,0,0,1)
 EmoteFrame.text = EmoteFrame:CreateFontString(nil,"ARTWORK")
 EmoteFrame.text:SetFont("Fonts\\ARHei.ttf",14,"OUTLINE")
 EmoteFrame.text:SetShadowOffset(1, 0)
@@ -194,8 +195,9 @@ local function CreateEmoteTable(frame,page)
 	end
 	local col = ceil(iconNums / row)
 	frame:SetSize(iconSize*row+iconSpace*(row+1), iconSize*col + iconSpace*(col+1))
-	frame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=2})
-	frame:SetBackdropColor(0,0,0,.8)
+	-- frame:SetBackdrop({bgFile="Interface\\Buttons\\WHITE8X8", edgeFile="Interface\\Buttons\\WHITE8X8", tile = false, edgeSize=2})
+	frame:SetBackdrop({bgFile="Interface\\AddOns\\MyChatBar\\tga", edgeFile="Interface\\AddOns\\MyChatBar\\tga", tile = false, edgeSize=2})
+	frame:SetBackdropColor(0,0,0,1)
 	frame:SetBackdropBorderColor(1,1,1,.8)
 	frame:SetPoint("BOTTOMLEFT",EmoteFrame,"TOPLEFT",0,5)
 	for i = 1, iconNums do
@@ -233,8 +235,8 @@ EmoteFrame:SetScript("OnMouseDown",function(self,button)
 		ToggleEmote(page) 		
 	end
 end)
--- EmoteFrame:SetScript("OnEnter",function() countdown = 5 end)
--- EmoteFrame:SetScript("OnLeave",function() end)
+EmoteFrame:SetScript("OnEnter",function() countdown = 5 end)
+EmoteFrame:SetScript("OnLeave",function() end)
 -- 聊天气泡
 local MaxWidth = 240
 local function BubbleEmote(frame, region)
@@ -262,10 +264,52 @@ local function BubbleEmote(frame, region)
 		end
 	end
 	region:SetText(text)
+	-- print(text)
 	region.cachedText = text
 	region:SetWidth(math.min(region:GetStringWidth(),MaxWidth))
 end
-
+-- breathColor
+local r,g,b = 0,0,0
+local turn = false
+local function breathColor(t)
+	-- 目标颜色
+	local endR = RAID_CLASS_COLORS[select(2,UnitClass("player"))].r
+	local endG = RAID_CLASS_COLORS[select(2,UnitClass("player"))].g
+	local endB = RAID_CLASS_COLORS[select(2,UnitClass("player"))].b
+	-- local 
+	
+	local step = t/5
+	-- r = r + step
+	-- g = g + step
+	-- b = b + step
+	-- if r >= endR then
+		-- r = endR
+	-- end
+	-- if g >= endG then
+		-- g = endG
+	-- end
+	-- if b >= endB then 
+		-- b = endB
+	-- end
+	if turn then 
+		r = (r - step) <= 0 and 0 or (r - step)
+		g = (g - step) <= 0 and 0 or (g - step)
+		b = (b - step) <= 0 and 0 or (b - step)
+	else
+		r = min((r + step),endR)
+		g = min((g + step),endG)
+		b = min((b + step),endB)
+	end
+	if r == endR and g == endG and b == endB then
+		turn = true
+	elseif r == 0 and g == 0 and b == 0 then 
+		turn = false
+	end
+	-- print(r..","..g..","..b)
+	
+	EmoteFrame:SetBackdropBorderColor(r,g,b,1)
+	
+end
 local interval = 0.1
 EmoteFrame:SetScript("OnUpdate",function(self, t)
 	interval = interval - t
@@ -290,4 +334,6 @@ EmoteFrame:SetScript("OnUpdate",function(self, t)
 		if EmoteTable2 ~= nil then EmoteTable2:Hide() end
 		-- EmoteTable2:Hide()
 	end
+	breathColor(t)
 end)
+-- RAID_CLASS_COLORS[select(2,UnitClass("player"))]
