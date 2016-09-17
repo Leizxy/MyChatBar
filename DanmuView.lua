@@ -114,7 +114,7 @@ ChatFrame1.AddMessage = function(self,text,...)
 	if (select(1,...)) then
 		if 
 		strfind(text,"%[.-%].-说：?") or -- SAY,WHISPER(from)
-		strfind(text,"发送给.-%[.-%]：?") or -- WHISPER(to)
+		strfind(text,"发送给.-%[.-%]?") or -- WHISPER(to)
 		strfind(text,"%[.-%].-喊道：?") or -- YELL
 		strfind(text,"%[.-队.-%].-%[.-%]?") or -- PARTY(LEADER),RAID(LEADER,WARNING)
 		strfind(text,"%[公会%].-%[.-%]?") or -- GUILD

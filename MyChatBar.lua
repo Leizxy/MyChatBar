@@ -56,10 +56,11 @@ getmetatable(ChatTypeInfo).__index[]
 -- print(editBox:GetName())
 
 -- TODO
+-- /dump _G["GarrisonFollowerAlertFrame"]
 local function getPlayerInformation()
 	-- ItemLevel
 	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
-	local LEVEL = "("..avgItemLevelEquipped.."/"..avgItemLevel..")"
+	-- local LEVEL = "("..avgItemLevelEquipped.."/"..avgItemLevel..")"
 	-- Specialization
 	local currentSpec = GetSpecialization()
 	local SPEC = select(2,GetSpecializationInfo(currentSpec))
@@ -69,8 +70,8 @@ local function getPlayerInformation()
 	local CRIT = GetCritChance()
 	-- Mastery
 	local MASTERY = GetMastery()
-	
-	return string.format("装等:%s;专精:%s;急速:%s;暴击:%s;精通:%s.",LEVEL,SPEC,HASTE,CRIT,MASTERY)
+	return string.format("装等:(%.1f/%.1f); 专精:%s; 急速:%.2f; 暴击:%.2f; 精通:%.2f.",
+						avgItemLevelEquipped,avgItemLevel,SPEC,HASTE,CRIT,MASTERY)
 end
 
 local function ShowChannelButtons(channels)
